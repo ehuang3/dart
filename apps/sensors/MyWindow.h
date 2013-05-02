@@ -7,7 +7,7 @@
 #include "integration/RK4Integrator.h"
 #include "collision/CollisionSkeleton.h"
 #include "dynamics/SkeletonDynamics.h"
-#include "sensors/ForceSensor.h"
+#include "sensors/ImuSensor.h"
 
 namespace dynamics{
     class ContactDynamics;
@@ -49,7 +49,7 @@ public:
         }
 
         dynamics::BodyNodeDynamics *nodeParent = static_cast<dynamics::BodyNodeDynamics*>(mSkels[1]->mRoot);
-        mForceSensor = new sensors::ForceSensor("Force sensor 1", mSkels[1], nodeParent);
+        mImuSensor = new sensors::ImuSensor("Force sensor 1", nodeParent);
 
         int sumNDofs = 0;
         mIndices.push_back(sumNDofs);
@@ -88,7 +88,7 @@ public:
     Eigen::Vector3d mForce;
     std::vector<int> mIndices;
 
-    sensors::ForceSensor *mForceSensor;
+    sensors::ImuSensor *mImuSensor;
 
     void initDyn();
     void bake();

@@ -1,6 +1,6 @@
 #include "MyWindow.h"
 #include "dynamics/BodyNodeDynamics.h"
-#include "sensors/ForceSensor.h"
+#include "sensors/ImuSensor.h"
 #include "dynamics/ContactDynamics.h"
 #include "kinematics/Dof.h"
 #include "collision/CollisionSkeleton.h"
@@ -175,7 +175,7 @@ void MyWindow::draw()
         sprintf(buff, "%d", mSimFrame);
 
     char forceBuff[64];
-    Eigen::VectorXd force = mForceSensor->pollLatest();
+    Eigen::VectorXd force = mImuSensor->pollLatest();
     // Eigen::VectorXd force = mSkels[1]->getExternalForces();
     sprintf(forceBuff, "<< %f, %f, %f >>", force[0], force[1], force[2]);
     string frame2(forceBuff);
