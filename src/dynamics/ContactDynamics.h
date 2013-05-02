@@ -68,6 +68,7 @@ namespace dynamics {
         virtual ~ContactDynamics();
         void applyContactForces();
         void reset();
+        void addSkeleton(SkeletonDynamics* _newSkel);
         inline Eigen::VectorXd getConstraintForce(int _skelIndex) const { return mConstrForces[_skelIndex]; }
         inline collision_checking::SkeletonCollision* getCollisionChecker() const {return mCollisionChecker; }
         int getNumContacts() const;
@@ -84,7 +85,7 @@ namespace dynamics {
         void applySolution();
 
         inline int getNumSkels() const { return mSkels.size(); }
-        inline int getNumTotalDofs() const { return mIndices[mIndices.size() - 1]; }
+        inline int getNumTotalDofs() const { return mIndices.back(); }
         inline int getNumContactDirections() const { return mNumDir; }
 
         Eigen::MatrixXd getJacobian(kinematics::BodyNode* node, const Eigen::Vector3d& p);

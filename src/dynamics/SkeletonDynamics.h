@@ -41,6 +41,7 @@
 #include <vector>
 #include <Eigen/Dense>
 #include "kinematics/Skeleton.h"
+//#include "utils/Console.h"
 
 namespace dynamics{
 
@@ -73,10 +74,14 @@ namespace dynamics{
         Eigen::VectorXd getCombinedVector() const { return mCg; }
         Eigen::VectorXd getExternalForces() const { return mFext; }
         Eigen::VectorXd getInternalForces() const { return mFint; }
-        Eigen::VectorXd getQDotVector() const { return mQdot; }
+        Eigen::VectorXd getPoseVelocity() const { return mQdot; }
         bool getImmobileState() const { return mImmobile; }
         void setImmobileState(bool _s) { mImmobile = _s; }
-        void setInternalForces(Eigen::VectorXd _q) { mFint = _q; } 
+        void setInternalForces(const Eigen::VectorXd& _forces);
+        void setMinInternalForces(Eigen::VectorXd _minForces) { mFintMin = _minForces; }
+        Eigen::VectorXd getMinInternalForces() const { return mFintMin; }
+        void setMaxInternalForces(Eigen::VectorXd _maxForces) { mFintMax = _maxForces; }
+        Eigen::VectorXd getMaxInternalForces() const { return mFintMax; }
 
     protected:
         Eigen::MatrixXd mM;    ///< Mass matrix for the skeleton
@@ -87,6 +92,8 @@ namespace dynamics{
         Eigen::VectorXd mCg;   ///< combined coriolis and gravity term == mC*qdot + g
         Eigen::VectorXd mFext; ///< external forces vector for the skeleton
         Eigen::VectorXd mFint; ///< internal forces vector for the skeleton; computed by an external controller
+        Eigen::VectorXd mFintMin; ///< minimum internal forces
+        Eigen::VectorXd mFintMax; ///< maximum internal forces
         Eigen::VectorXd mQdot; ///< the current qdot
 
         bool mImmobile; ///< If the skeleton is immobile, its dynamic effect is equivalent to having infinite mass; if the DOFs of an immobile skeleton are manually changed, the collision results might not be correct

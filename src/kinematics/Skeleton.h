@@ -62,7 +62,7 @@ namespace kinematics {
 
         virtual BodyNode* createBodyNode(const char* const name = NULL);
         void addMarker(Marker *_h);
-        void addNode(BodyNode *_b);
+        void addNode(BodyNode *_b, bool _addParentJoint = true);
         void addJoint(Joint *_j);
         void addDof(Dof *_d);
         void addTransform(Transformation *_t);
@@ -89,9 +89,23 @@ namespace kinematics {
         virtual void setPose(const Eigen::VectorXd&, bool bCalcTrans = true, bool bCalcDeriv = true);
         Eigen::VectorXd getConfig(std::vector<int> _id);
         void setConfig(std::vector<int> _id, Eigen::VectorXd _vals, bool _calcTrans = true, bool _calcDeriv = true);
+        Eigen::MatrixXd getJacobian(BodyNode* _bd, Eigen::Vector3d& _localOffset);
+
 
         void draw(renderer::RenderInterface* _ri = NULL, const Eigen::Vector4d& _color=Eigen::Vector4d::Ones(), bool _useDefaultColor = true) const;
         void drawMarkers(renderer::RenderInterface* _ri = NULL, const Eigen::Vector4d& _color=Eigen::Vector4d::Ones(), bool _useDefaultColor = true ) const;
+
+        /// @brief Find body node by name.
+        /// @param[in] _name The name of body node looking for.
+        /// @return Searched body node. If the skeleton does not have a body
+        /// node with _name, then return NULL.
+        BodyNode* getBodyNode(const char* const _name) const;
+
+        /// @brief Find joint by name.
+        /// @param[in] _name The name of joint looking for.
+        /// @return Searched joint. If the skeleton does not have a joint with
+        /// _name, then return NULL.
+        Joint* getJoint(const char* const _name) const;
 
     protected:
         std::string mName;

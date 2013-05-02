@@ -46,6 +46,7 @@ using namespace Eigen;
 #include "BodyNode.h"
 #include "Marker.h"
 #include "Transformation.h"
+#include "utils/UtilsMath.h"
 
 #include "renderer/RenderInterface.h"
 
@@ -77,10 +78,12 @@ namespace kinematics {
         body->addMarker(_h);
     }
 
-    void Skeleton::addNode(BodyNode *_b) {
+    void Skeleton::addNode(BodyNode *_b, bool _addParentJoint) {
         mNodes.push_back(_b);
         _b->setSkelIndex(mNodes.size()-1);
-        addJoint(_b->getParentJoint());
+        // The parent joint possibly be null
+        if (_addParentJoint)
+            addJoint(_b->getParentJoint());
     }
 
     void Skeleton::addJoint(Joint *_j) {
@@ -215,6 +218,16 @@ namespace kinematics {
         }
   }
   
+    MatrixXd Skeleton::getJacobian(BodyNode* _bd, Vector3d& _localOffset) {
+        MatrixXd J(3, mDofs.size());
+        J.setZero();
+        for(int i = 0; i < _bd->getNumDependentDofs(); i++) {
+            int dofindex = _bd->getDependentDof(i);
+            VectorXd deriv = utils::xformHom(_bd->getDerivWorldTransform(i), _localOffset);
+            J.col(dofindex) = deriv;
+        }
+        return J;
+    }
 
     void Skeleton::draw(renderer::RenderInterface* _ri, const Vector4d& _color, bool _useDefaultColor) const {
         mRoot->draw(_ri, _color, _useDefaultColor);
@@ -223,5 +236,36 @@ namespace kinematics {
         mRoot->drawMarkers(_ri, _color, _useDefaultColor);
     }
 
+    BodyNode* Skeleton::getBodyNode(const char* const _name) const
+    {
+        BodyNode* result = NULL;
+
+        for (unsigned int i = 0; i < mNodes.size(); ++i)
+        {
+            if (mNodes[i]->getName() == _name)
+            {
+                result = mNodes[i];
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    Joint* Skeleton::getJoint(const char* const _name) const
+    {
+        Joint* result = NULL;
+
+        for (unsigned int i = 0; i < mJoints.size(); ++i)
+        {
+            if (mJoints[i]->getName() == _name)
+            {
+                result = mJoints[i];
+                break;
+            }
+        }
+
+        return result;
+    }
 
 } // namespace kinematics

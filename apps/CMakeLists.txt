@@ -18,6 +18,8 @@ foreach(APPDIR
 	hardcodedDesign
 	closedLoop
 	drawRRT
+        activity1
+        activity2
 	)
     add_subdirectory(${APPDIR})
     if(WIN32)
