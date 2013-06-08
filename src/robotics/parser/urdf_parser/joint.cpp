@@ -53,7 +53,7 @@ bool parseJointDynamics(JointDynamics &jd, TiXmlElement* config)
   // Get joint damping
   const char* damping_str = config->Attribute("damping");
   if (damping_str == NULL){
-    std::cout<<"joint dynamics: no damping, defaults to 0"<<std::endl;
+    //std::cout<<"joint dynamics: no damping, defaults to 1"<<std::endl;
     jd.damping = 0;
   }
   else
@@ -72,7 +72,7 @@ bool parseJointDynamics(JointDynamics &jd, TiXmlElement* config)
   // Get joint friction
   const char* friction_str = config->Attribute("friction");
   if (friction_str == NULL){
-    std::cout<<"joint dynamics: no friction, defaults to 0"<<std::endl;
+    //std::cout<<"joint dynamics: no friction, defaults to 0"<<std::endl;
     jd.friction = 0;
   }
   else
@@ -90,7 +90,7 @@ bool parseJointDynamics(JointDynamics &jd, TiXmlElement* config)
 
   if (damping_str == NULL && friction_str == NULL)
   {
-    printf("joint dynamics element specified with no damping and no friction \n");
+    //printf("joint dynamics element specified with no damping and no friction \n");
     return false;
   }
   else{
